@@ -23,7 +23,7 @@ def test_add_task(task_manager):
         title="Test Task",
         description="Description of the test task",
         category="Work",
-        priority="High"
+        priority="High",
     )
     assert len(task_manager.tasks) == 1
     assert task_manager.tasks[0].title == "Test Task"
@@ -40,7 +40,7 @@ def test_update_task_status(task_manager):
         title="Test Task",
         description="Description of the test task",
         category="Work",
-        priority="High"
+        priority="High",
     )
     task_id = task_manager.tasks[0].task_id
     task_manager.update_task(task_id, status="Выполнена")
@@ -57,13 +57,13 @@ def test_search_tasks(task_manager):
         title="Test Task 1",
         description="Description of task 1",
         category="Work",
-        priority="High"
+        priority="High",
     )
     task_manager.add_task(
         title="Another Task",
         description="Description of another task",
         category="Personal",
-        priority="Low"
+        priority="Low",
     )
     found_tasks = task_manager.search_tasks("Test")
     assert len(found_tasks) == 1
@@ -80,7 +80,7 @@ def test_remove_task(task_manager):
         title="Test Task",
         description="Description of the test task",
         category="Work",
-        priority="High"
+        priority="High",
     )
     task_id = task_manager.tasks[0].task_id
     task_manager.remove_task(task_id)
@@ -97,7 +97,7 @@ def test_save_and_load(task_manager):
         title="Test Task",
         description="Description of the test task",
         category="Work",
-        priority="High"
+        priority="High",
     )
     task_manager.save_to_storage()
 

@@ -48,28 +48,51 @@ def main():
                 try:
                     task_id = int(input("Введите ID задачи: ").strip())
 
-                    task = next((task for task in task_manager.tasks if task.task_id == task_id), None)
+                    task = next(
+                        (
+                            task
+                            for task in task_manager.tasks
+                            if task.task_id == task_id
+                        ),
+                        None,
+                    )
 
                     if not task:
                         error(f"Задача с ID {task_id} не найдена. Попробуйте снова.")
                     else:
-                        print("Вы можете изменить следующие параметры задачи: title, "
-                              "description, category, priority, status.")
+                        print(
+                            "Вы можете изменить следующие параметры задачи: title, "
+                            "description, category, priority, status."
+                        )
                         print("Оставьте поле пустым, если не хотите изменять значение.")
 
-                        new_title = input(f"Новое название задачи (текущее: '{task.title}'): ").strip()
-                        new_description = input(f"Новое описание задачи (текущее: '{task.description}'): ").strip()
-                        new_category = input(f"Новая категория задачи (текущая: '{task.category}'): ").strip()
-                        new_priority = input(f"Новая приоритетность задачи (текущая: '{task.priority}'): ").strip()
+                        new_title = input(
+                            f"Новое название задачи (текущее: '{task.title}'): "
+                        ).strip()
+                        new_description = input(
+                            f"Новое описание задачи (текущее: '{task.description}'): "
+                        ).strip()
+                        new_category = input(
+                            f"Новая категория задачи (текущая: '{task.category}'): "
+                        ).strip()
+                        new_priority = input(
+                            f"Новая приоритетность задачи (текущая: '{task.priority}'): "
+                        ).strip()
                         new_status = input(
-                            f"Новый статус ('Не выполнена' или 'Выполнена', текущий: '{task.status}'): ").strip()
+                            f"Новый статус ('Не выполнена' или 'Выполнена', текущий: '{task.status}'): "
+                        ).strip()
 
                         updates = {}
-                        if new_title: updates['title'] = new_title
-                        if new_description: updates['description'] = new_description
-                        if new_category: updates['category'] = new_category
-                        if new_priority: updates['priority'] = new_priority
-                        if new_status: updates['status'] = new_status
+                        if new_title:
+                            updates["title"] = new_title
+                        if new_description:
+                            updates["description"] = new_description
+                        if new_category:
+                            updates["category"] = new_category
+                        if new_priority:
+                            updates["priority"] = new_priority
+                        if new_status:
+                            updates["status"] = new_status
 
                         if updates:
                             task_manager.update_task(task_id, **updates)

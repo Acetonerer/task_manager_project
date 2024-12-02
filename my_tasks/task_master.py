@@ -8,8 +8,17 @@ class Task:
     """
     Класс, собственно, задачи
     """
-    def __init__(self, task_id: int, title: str, description: str, category: str,
-                 priority: str, date_create=datetime.datetime.now().strftime("%d.%m.%Y"), status: str = "Не выполнена"):
+
+    def __init__(
+        self,
+        task_id: int,
+        title: str,
+        description: str,
+        category: str,
+        priority: str,
+        date_create=datetime.datetime.now().strftime("%d.%m.%Y"),
+        status: str = "Не выполнена",
+    ):
         self.task_id = task_id
         self.title = title
         self.description = description
@@ -32,7 +41,7 @@ class Task:
             f"| Дата создания: {self.date_create}"
             f"| Приоритетность: {self.priority}"
             f"| Статус: {self.status}"
-            )
+        )
 
     def to_dict(self) -> Dict:
         """
@@ -55,6 +64,7 @@ class TaskManager:
     """
     Класс, собственно, менеджера задач
     """
+
     def __init__(self, storage_file: str):
         """
         Инициализация библиотеки с загрузкой данных из файла
@@ -71,7 +81,7 @@ class TaskManager:
         :return: Список объектов Task
         """
         try:
-            with open(self.storage_file, 'r', encoding='utf-8') as file:
+            with open(self.storage_file, "r", encoding="utf-8") as file:
                 data = json.load(file)
                 log(f"Загружено {len(data)} задач из базы данных.")
                 return [Task(**task_data) for task_data in data]
@@ -87,8 +97,13 @@ class TaskManager:
         Метод сохранения данных в БД в формате JSON
         """
         try:
-            with open(self.storage_file, 'w', encoding='utf-8') as file:
-                json.dump([task.to_dict() for task in self.tasks], file, ensure_ascii=False, indent=4)
+            with open(self.storage_file, "w", encoding="utf-8") as file:
+                json.dump(
+                    [task.to_dict() for task in self.tasks],
+                    file,
+                    ensure_ascii=False,
+                    indent=4,
+                )
         except Exception as e:
             error(f"Ошибка сохранения данных в файл {self.storage_file}: {e}")
 
@@ -101,8 +116,13 @@ class TaskManager:
         :param category:
         """
         next_id = max([task.task_id for task in self.tasks], default=0) + 1
-        new_task = Task(task_id=next_id, title=title, description=description,
-                        category=category, priority=priority)
+        new_task = Task(
+            task_id=next_id,
+            title=title,
+            description=description,
+            category=category,
+            priority=priority,
+        )
         self.tasks.append(new_task)
         self.save_to_storage()
         success(f"Задача с параметрами {new_task} \n       была успешно добавлена")
@@ -113,7 +133,9 @@ class TaskManager:
 
         :param task_id: ID задачи
         """
-        task_for_del = next((task for task in self.tasks if task.task_id == task_id), None)
+        task_for_del = next(
+            (task for task in self.tasks if task.task_id == task_id), None
+        )
         if task_for_del:
             self.tasks.remove(task_for_del)
             self.save_to_storage()
@@ -130,10 +152,7 @@ class TaskManager:
         """
         query = str(query).lower()
 
-        found_books = [
-            task for task in self.tasks
-            if query in task.title.lower()
-        ]
+        found_books = [task for task in self.tasks if query in task.title.lower()]
         if found_books:
             log(f"Найдено {len(found_books)} задач: ")
             for book in found_books:
@@ -159,20 +178,24 @@ class TaskManager:
         """
         task = next((task for task in self.tasks if task.task_id == task_id), None)
 
-        valid_fields = {'title', 'description', 'category', 'priority', 'status'}
+        valid_fields = {"title", "description", "category", "priority", "status"}
 
         for field, value in kwargs.items():
             if field not in valid_fields:
                 error(f"Недопустимое поле '{field}'. Допустимые поля: {valid_fields}.")
                 continue
 
-            if field == 'status' and value not in {'Не выполнена', 'Выполнена'}:
-                error(f"Некорректный статус '{value}'. Допустимые статусы: 'Не выполнена', 'Выполнена'.")
+            if field == "status" and value not in {"Не выполнена", "Выполнена"}:
+                error(
+                    f"Некорректный статус '{value}'. Допустимые статусы: 'Не выполнена', 'Выполнена'."
+                )
                 continue
 
             old_value = getattr(task, field, None)
             setattr(task, field, value)
-            success(f"Поле '{field}' задачи (ID: {task_id}) обновлено с '{old_value}' на '{value}'.")
+            success(
+                f"Поле '{field}' задачи (ID: {task_id}) обновлено с '{old_value}' на '{value}'."
+            )
 
         self.save_to_storage()
         success(f"Задача с ID {task_id} успешно обновлена.")
